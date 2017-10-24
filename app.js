@@ -6,13 +6,43 @@ var dataController = (function() {
 // Immediately Invoked Function Expression for UI CONTROLLER
 var uiController = (function() {
 
+  var DOMstrings = {
+    inputType: '.add__type',
+    inputDescription: '.add__description',
+    inputValue: '.add__value',
+    inputBtn: '.add__btn'
+  }
+
+  return {
+    // 1. get user input data
+    getInput: function() {
+      // return object with all 3 values extracted from user input
+      return {
+        // get user input for item type, description and value
+        // type will be inc for income or exp for expense
+        type: document.querySelector(DOMstrings.inputType).value,
+        description: document.querySelector(DOMstrings.inputDescription).value,
+        value: document.querySelector(DOMstrings.inputValue).value
+      };
+    },
+    getDOMstrings: function() {
+      return DOMstrings;
+    }
+  };
+
 })();
 
 // Immediately Invoked Function Expression for APP CONTROLLER
 var appController = (function(dataCtrl, uiCtrl) {
+  var DOM = uiCtrl.getDOMstrings();
+
   // click event listener for add__btn
   var ctrlAddItem = function() {
     // 1. get user input data
+    var input = uiCtrl.getInput();
+    console.log(input.type);
+    console.log(input.description);
+    console.log(input.value);
 
     // 2. add user input item to data controller
 
@@ -23,7 +53,7 @@ var appController = (function(dataCtrl, uiCtrl) {
     // 5. display budget
   }
 
-  document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+  document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
   // return key press event listener for page
   document.addEventListener('keypress', function(event) {
@@ -31,6 +61,7 @@ var appController = (function(dataCtrl, uiCtrl) {
     if(event.keyCode === 13 || event.which === 13) {
       ctrlAddItem();
     }
+
   });
 
 })(dataController, uiController);
