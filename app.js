@@ -51,9 +51,9 @@ var appController = (function(dataCtrl, uiCtrl) {
   var ctrlAddItem = function() {
     // 1. get user input data
     var input = uiCtrl.getInput();
-    console.log(input.type);
-    console.log(input.description);
-    console.log(input.value);
+    // console.log(input.type);
+    // console.log(input.description);
+    // console.log(input.value);
 
     // 2. add user input item to data controller
 
@@ -64,4 +64,12 @@ var appController = (function(dataCtrl, uiCtrl) {
     // 5. display budget
   };
 
+  return {
+    init: function() {
+      setUpEventListeners();
+    }
+  }
+
 })(dataController, uiController);
+
+appController.init();
