@@ -1,5 +1,17 @@
 // Immediately Invoked Function Expression for DATA CONTROLLER
 var dataController = (function() {
+  // function constructor for expenses
+  var Expense = function(id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
+  // function constructor for income
+  var Income = function(id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
 
 })();
 
