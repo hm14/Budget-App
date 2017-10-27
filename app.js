@@ -26,17 +26,21 @@ var dataController = (function() {
 
   return {
     addItem: function(type, description, value) {
-      var newItem;
-      var ID;
+      var newItem, id;
       // create id
-      ID = data.allItems[type][data.allItems[type].length-1].id + 1;
+      if(data.allItems[type].length > 0) {
+        id = data.allItems[type][data.allItems[type].length - 1].id + 1;
+      } else {
+        id = 0;
+      }
+
       // create new item based on item type
       if(type === 'inc') {
-          newItem = Income(ID, description, val);
+          newItem = new Income(id, description, value);
       } else if(type === 'exp') {
-          newItem = Expense(ID, description, val);
+          newItem = new Expense(id, description, value);
       }
-      // psh newly created item to relevant array
+      // push newly created item to relevant array
       data.allItems[type].push(newItem);
       // return newly added item
       return newItem;
@@ -91,10 +95,12 @@ var appController = (function(dataCtrl, uiCtrl) {
 
   // click event listener for add__btn
   var ctrlAddItem = function() {
+    var input, newItem;
     // 1. get user input data
-    var input = uiCtrl.getInput();
+    input = uiCtrl.getInput();
 
     // 2. add user input item to data controller
+    newItem = dataCtrl.addItem(input.type, input.description, input.value);
 
     // 3. add new item to ui
 
