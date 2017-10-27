@@ -13,6 +13,17 @@ var dataController = (function() {
     this.value = value;
   };
 
+  var data = {
+    allItems: {
+      exp: [],
+      inc: []
+    },
+    totals: {
+      exp: 0,
+      inc: 0
+    }
+  }
+
 })();
 
 // Immediately Invoked Function Expression for UI CONTROLLER
