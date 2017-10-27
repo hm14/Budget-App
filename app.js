@@ -115,6 +115,8 @@ var uiController = (function() {
       fieldsArray.forEach(function(current, index, array) {
         current.value = "";
       });
+      // bring cursor back to second input element after clearing input
+      fieldsArray[0].focus();
     },
 
     getDOMstrings: function() {
