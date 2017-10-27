@@ -82,13 +82,13 @@ var uiController = (function() {
       if(type === 'exp') {
         element = DOMstrings.expenseContainer;
         htmlStr = '<div class="item clearfix" id="expense-%0%"><div class="item__description">%description%</div>\
-        <div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div>\
+        <div class="right clearfix"><div class="item__value">-%value%</div><div class="item__percentage">21%</div>\
         <div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>\
         </div></div></div>'
       } else if (type === 'inc') {
         element = DOMstrings.incomeContainer;
         htmlStr = '<div class="item clearfix" id="income-%0%"><div class="item__description">%description%</div>\
-        <div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete">\
+        <div class="right clearfix"><div class="item__value">+%value%</div><div class="item__delete">\
         <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
       }
 
@@ -101,6 +101,20 @@ var uiController = (function() {
       // 3. insert HTML into DOM
       // uses built in insertAdjacentHTML method
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtmlStr);
+    },
+
+    // clear input fields after reading input
+    clearFields: function() {
+      var fields, fieldsArray;
+      // document.querySelectorAll() will return a list
+      fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+
+      // use array slice method for a list
+      fieldsArray = Array.prototype.slice.call(fields);
+
+      fieldsArray.forEach(function(current, index, array) {
+        current.value = "";
+      });
     },
 
     getDOMstrings: function() {
@@ -137,9 +151,12 @@ var appController = (function(dataCtrl, uiCtrl) {
     // 3. add new item to UI
     uiCtrl.addListItem(newItem, input.type);
 
-    // 4. calculate budget
+    // 4. clear input fields after reading data
+    uiCtrl.clearFields();
 
-    // 5. display budget
+    // 5. calculate budget
+
+    // 6. display budget
   };
 
   return {
