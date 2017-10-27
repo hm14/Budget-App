@@ -13,6 +13,7 @@ var dataController = (function() {
     this.value = value;
   };
 
+  // data structure for item data
   var data = {
     allItems: {
       exp: [],
@@ -56,8 +57,10 @@ var uiController = (function() {
     inputType: '.add__type',
     inputDescription: '.add__description',
     inputValue: '.add__value',
-    inputBtn: '.add__btn'
-  }
+    inputBtn: '.add__btn',
+    incomeContainer: '.income__list',
+    expenseContainer: '.expenses__list'
+  };
 
   return {
     // 1. get user input data
@@ -71,6 +74,35 @@ var uiController = (function() {
         value: document.querySelector(DOMstrings.inputValue).value
       };
     },
+
+    addListItem: function(item, type) {
+      var htmlStr, newHtmlStr, element;
+
+      // 1. create HTML str with placeholder text-transform
+      if(type === 'exp') {
+        element = DOMstrings.expenseContainer;
+        htmlStr = '<div class="item clearfix" id="expense-%0%"><div class="item__description">%description%</div>\
+        <div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div>\
+        <div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>\
+        </div></div></div>'
+      } else if (type === 'inc') {
+        element = DOMstrings.incomeContainer;
+        htmlStr = '<div class="item clearfix" id="income-%0%"><div class="item__description">%description%</div>\
+        <div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete">\
+        <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+      }
+
+      // 2. replace placeholder text with actual item data
+      //  uses built in str method replace
+      newHtmlStr = htmlStr.replace('%id%', item.id);
+      newHtmlStr = newHtmlStr.replace('%description%', item.description);
+      newHtmlStr = newHtmlStr.replace('%value%', item.value);
+
+      // 3. insert HTML into DOM
+      // uses built in insertAdjacentHTML method
+      document.querySelector(element).insertAdjacentHTML('beforeend', newHtmlStr);
+    },
+
     getDOMstrings: function() {
       return DOMstrings;
     }
@@ -102,7 +134,8 @@ var appController = (function(dataCtrl, uiCtrl) {
     // 2. add user input item to data controller
     newItem = dataCtrl.addItem(input.type, input.description, input.value);
 
-    // 3. add new item to ui
+    // 3. add new item to UI
+    uiCtrl.addListItem(newItem, input.type);
 
     // 4. calculate budget
 
