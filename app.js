@@ -22,7 +22,26 @@ var dataController = (function() {
       exp: 0,
       inc: 0
     }
-  }
+  };
+
+  return {
+    addItem: function(type, description, value) {
+      var newItem;
+      var ID;
+      // create id
+      ID = data.allItems[type][data.allItems[type].length-1].id + 1;
+      // create new item based on item type
+      if(type === 'inc') {
+          newItem = Income(ID, description, val);
+      } else if(type === 'exp') {
+          newItem = Expense(ID, description, val);
+      }
+      // psh newly created item to relevant array
+      data.allItems[type].push(newItem);
+      // return newly added item
+      return newItem;
+    }
+  };
 
 })();
 
@@ -74,9 +93,6 @@ var appController = (function(dataCtrl, uiCtrl) {
   var ctrlAddItem = function() {
     // 1. get user input data
     var input = uiCtrl.getInput();
-    // console.log(input.type);
-    // console.log(input.description);
-    // console.log(input.value);
 
     // 2. add user input item to data controller
 
