@@ -13,6 +13,14 @@ var dataController = (function() {
     this.value = value;
   };
 
+  var calculateTotal = function(type) {
+    var sum = 0;
+    data.allItems[type].forEach(function(current) {
+      sum += current.value;
+    });
+    data.totals[type] = sum;
+  };
+
   // data structure for item data
   var data = {
     allItems: {
@@ -22,7 +30,9 @@ var dataController = (function() {
     totals: {
       exp: 0,
       inc: 0
-    }
+    },
+    budget: 0,
+    percentage: -1
   };
 
   return {
@@ -45,6 +55,18 @@ var dataController = (function() {
       data.allItems[type].push(newItem);
       // return newly added item
       return newItem;
+    },
+
+    calculateBudget: function() {
+      // calculate total income and expenses
+      calculateTotal('exp');
+      calculateTotal('inc');
+
+      // calculate budget = income - expenses
+      data.budget = data.totals.inc - data.totals.exp;
+
+      // calculate percentage of income spent on each expense
+      data.percentage = Math.round(100 * (data.totals.exp / data.totals.inc));
     }
   };
 
