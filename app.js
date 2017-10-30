@@ -260,7 +260,7 @@ var appController = (function(dataCtrl, uiCtrl) {
       // exp or inc
       type = splitID[0];
       //  numerical id
-      id = splitID[1];
+      id = parseInt(splitID[1]);
 
       // delete item from data structure
       dataCtrl.deleteItem(type, id);
