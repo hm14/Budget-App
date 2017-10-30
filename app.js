@@ -122,13 +122,13 @@ var uiController = (function() {
       // 1. create HTML str with placeholder text-transform
       if(type === 'exp') {
         element = DOMstrings.expenseContainer;
-        htmlStr = '<div class="item clearfix" id="expense-%0%"><div class="item__description">%description%</div>\
+        htmlStr = '<div class="item clearfix" id="exp-%0%"><div class="item__description">%description%</div>\
         <div class="right clearfix"><div class="item__value">-%value%</div><div class="item__percentage">21%</div>\
         <div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>\
         </div></div></div>'
       } else if (type === 'inc') {
         element = DOMstrings.incomeContainer;
-        htmlStr = '<div class="item clearfix" id="income-%0%"><div class="item__description">%description%</div>\
+        htmlStr = '<div class="item clearfix" id="inc-%0%"><div class="item__description">%description%</div>\
         <div class="right clearfix"><div class="item__value">+%value%</div><div class="item__delete">\
         <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
       }
@@ -169,7 +169,7 @@ var uiController = (function() {
       if(obj.percentage > 0) {
         document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
       } else {
-                document.querySelector(DOMstrings.percentageLabel).textContent = '---';
+        document.querySelector(DOMstrings.percentageLabel).textContent = '---';
       }
     },
 
@@ -233,7 +233,15 @@ var appController = (function(dataCtrl, uiCtrl) {
 
   // click event listener for container
   var ctrlDeleteItem = function(event) {
-    console.log(event.target);
+    var itemId, splitID, type, id;
+    itemId = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    // extract item type and id from event listener target
+    if(itemId) {
+      // split str at -
+      splitID = itemID.split('-');
+      type = splitID[0];
+      id = splitID[1];
+    }
   };
 
   return {
