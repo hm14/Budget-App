@@ -57,6 +57,22 @@ var dataController = (function() {
       return newItem;
     },
 
+    deleteItem: function(type, id) {
+      var ids, index;
+      // use map method to create an array with ids
+      ids = data.allItems[type].map(function(current) {
+        return current.id;
+      });
+      // index will be -1 if id is not in array
+      index = ids.indexOf(id);
+      // check if id exists in array before deletion
+      if(id !== -1) {
+        // use splice method to delete item with matching id
+        data.allItems[type].splice(index, 1);
+
+      }
+    },
+
     calculateBudget: function() {
       // calculate total income and expenses
       calculateTotal('exp');
@@ -234,13 +250,20 @@ var appController = (function(dataCtrl, uiCtrl) {
   // click event listener for container
   var ctrlDeleteItem = function(event) {
     var itemId, splitID, type, id;
+    // event.target identifies element from where the click originated
+    // .parentNode climbs up a level to show parent of element
     itemId = event.target.parentNode.parentNode.parentNode.parentNode.id;
     // extract item type and id from event listener target
     if(itemId) {
       // split str at -
-      splitID = itemID.split('-');
+      splitID = itemId.split('-');
+      // exp or inc
       type = splitID[0];
+      //  numerical id
       id = splitID[1];
+
+      // delete item from data structure
+      dataCtrl.deleteItem(type, id);
     }
   };
 
