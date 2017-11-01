@@ -160,6 +160,12 @@ var uiController = (function() {
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtmlStr);
     },
 
+    deleteListItem: function(selectorId) {
+      var element;
+      element = document.getElementById(selectorId);
+      element.parentNode.removeChild(element)
+    },
+
     // clear input fields after reading input
     clearFields: function() {
       var fields, fieldsArray;
