@@ -66,11 +66,12 @@ var dataController = (function() {
       // index will be -1 if id is not in array
       index = ids.indexOf(id);
       // check if id exists in array before deletion
+      console.log(data.allItems[type][index]);
       if(id !== -1) {
         // use splice method to delete item with matching id
         data.allItems[type].splice(index, 1);
-
       }
+
     },
 
     calculateBudget: function() {
@@ -138,23 +139,24 @@ var uiController = (function() {
       // 1. create HTML str with placeholder text-transform
       if(type === 'exp') {
         element = DOMstrings.expenseContainer;
-        htmlStr = '<div class="item clearfix" id="exp-%0%"><div class="item__description">%description%</div>\
+        htmlStr = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div>\
         <div class="right clearfix"><div class="item__value">-%value%</div><div class="item__percentage">21%</div>\
         <div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>\
         </div></div></div>'
       } else if (type === 'inc') {
         element = DOMstrings.incomeContainer;
-        htmlStr = '<div class="item clearfix" id="inc-%0%"><div class="item__description">%description%</div>\
+        htmlStr = '<div class="item clearfix" id="income-%id%">%iId%<div class="item__description">%description%</div>\
         <div class="right clearfix"><div class="item__value">+%value%</div><div class="item__delete">\
         <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
       }
-
+      console.log(item.id);
+      console.log(htmlStr);
       // 2. replace placeholder text with actual item data
       //  uses built in str method replace
       newHtmlStr = htmlStr.replace('%id%', item.id);
       newHtmlStr = newHtmlStr.replace('%description%', item.description);
       newHtmlStr = newHtmlStr.replace('%value%', item.value);
-
+      console.log(newHtmlStr);
       // 3. insert HTML into DOM
       // uses built in insertAdjacentHTML method
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtmlStr);
@@ -163,7 +165,7 @@ var uiController = (function() {
     deleteListItem: function(selectorId) {
       var element;
       element = document.getElementById(selectorId);
-      element.parentNode.removeChild(element)
+      element.parentNode.removeChild(element);
     },
 
     // clear input fields after reading input
@@ -255,21 +257,37 @@ var appController = (function(dataCtrl, uiCtrl) {
 
   // click event listener for container
   var ctrlDeleteItem = function(event) {
+    // console.log(event.target);
+    // console.log(event.target.parentNode);
+    // console.log(event.target.parentNode.parentNode);
+    // console.log(event.target.parentNode.parentNode.parentNode);
+    // console.log(event.target.parentNode.parentNode.parentNode.parentNode);
+    // console.log(event.target.parentNode.parentNode.parentNode.parentNode.parentNode);
     var itemId, splitID, type, id;
     // event.target identifies element from where the click originated
     // .parentNode climbs up a level to show parent of element
     itemId = event.target.parentNode.parentNode.parentNode.parentNode.id;
     // extract item type and id from event listener target
+    console.log(itemId);
     if(itemId) {
       // split str at -
       splitID = itemId.split('-');
+      console.log(splitID);
+      console.log(splitID[0]);
+      console.log(splitID[1]);
       // exp or inc
       type = splitID[0];
       //  numerical id
       id = parseInt(splitID[1]);
-
+      console.log(id);
       // delete item from data structure
       dataCtrl.deleteItem(type, id);
+
+      // delete item from DOM
+      uiCtrl.deleteListItem(itemId);
+
+      // update budget
+      updateBudget();
     }
   };
 
