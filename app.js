@@ -5,7 +5,21 @@ var dataController = (function() {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
   };
+
+  Expense.prototype.calcPercentage = function(totalIncome) {
+    if(totalIncome > 0) {
+      this.percentage = Math.round(100 * (this.value / totalIncome));
+    } else {
+      this.percentage = -1;
+    }
+  };
+
+  Expense.prototype.getPercentage = function() {
+    return this.percentage;
+  }
+
   // function constructor for income
   var Income = function(id, description, value) {
     this.id = id;
@@ -88,6 +102,19 @@ var dataController = (function() {
         data.percentage = -1;
       }
 
+    },
+
+    calculatePercentages: function() {
+      data.allItems.exp.forEach(function(cur) {
+          cur.calcPercentage(data.totals.inc);
+      });
+    },
+
+    getPercentages: function() {
+      var allPercentages = data.allItems.exp.map(function(cur) {
+        return cur.getPercentage();
+      });
+      return allPercentages;
     },
 
     getBudget: function() {
@@ -230,8 +257,10 @@ var appController = (function(dataCtrl, uiCtrl) {
 
   var updatePercentages = function() {
     // calculate percentages
+    dataCtrl.calculatePercentages();
 
     //  read percentages from data CONTROLLER
+    var percentages = dataCtrl.getPercentages();
 
     //  update UI with new percentages
   };
