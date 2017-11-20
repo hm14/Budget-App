@@ -143,7 +143,8 @@ var uiController = (function() {
     incomeLabel: '.budget__income--value',
     expensesLabel: '.budget__expenses--value',
     percentageLabel: '.budget__expenses--percentage',
-    container: '.container'
+    container: '.container',
+    expensePercentLabel: '.item__percentage'
   };
 
   return {
@@ -220,6 +221,24 @@ var uiController = (function() {
       }
     },
 
+    displayPercentages: function(percentages) {
+      var fields = document.querySelectorAll(DOMstrings.expensePercentLabel);
+
+      var nodeListForEach = function(list, callback) {
+        for(var i=0; i<list.length; i++) {
+          callback(list[i], i);
+        }
+      };
+      nodeListForEach(fields, function(current, index) {
+        if(percentages[index] > 0) {
+          current.textContent = percentages[index] + '%';
+        } else {
+          current.textContent = '---';
+        }
+
+      });
+    },
+
     getDOMstrings: function() {
       return DOMstrings;
     }
@@ -263,6 +282,7 @@ var appController = (function(dataCtrl, uiCtrl) {
     var percentages = dataCtrl.getPercentages();
 
     //  update UI with new percentages
+    uiCtrl.displayPercentages(percentages);
   };
 
   // click event listener for add__btn
