@@ -167,20 +167,20 @@ var uiController = (function() {
       if(type === 'exp') {
         element = DOMstrings.expenseContainer;
         htmlStr = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div>\
-        <div class="right clearfix"><div class="item__value">-%value%</div><div class="item__percentage">21%</div>\
+        <div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div>\
         <div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>\
         </div></div></div>'
       } else if (type === 'inc') {
         element = DOMstrings.incomeContainer;
         htmlStr = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div>\
-        <div class="right clearfix"><div class="item__value">+%value%</div><div class="item__delete">\
+        <div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete">\
         <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
       }
       // 2. replace placeholder text with actual item data
       //  uses built in str method replace
       newHtmlStr = htmlStr.replace('%id%', item.id);
       newHtmlStr = newHtmlStr.replace('%description%', item.description);
-      newHtmlStr = newHtmlStr.replace('%value%', item.value);
+      newHtmlStr = newHtmlStr.replace('%value%', this.formatNumber(item.value, type));
       // 3. insert HTML into DOM
       // uses built in insertAdjacentHTML method
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtmlStr);
@@ -237,6 +237,23 @@ var uiController = (function() {
         }
 
       });
+    },
+
+    formatNumber: function(num, type) {
+      var numSplt, integer, decimal;
+      // get absolute value of num
+      num = Math.abs(num);
+      // change num to a decimal with 2 decimal places
+      num = num.toFixed(2);
+      // splite integer and decimal parts of num
+      numSplt = num.split('.');
+      integer = numSplt[0];
+      decimal = numSplt[1];
+      if(integer.length > 3) {
+        integer = integer.substr(0, integer.length-3) + ',' + integer.substr(integer.length-3, integer.length-1);
+      }
+      type === 'exp' ? sign = '-' : sign = '+';
+      return sign + ' ' + integer + '.' + decimal;
     },
 
     getDOMstrings: function() {
