@@ -147,6 +147,23 @@ var uiController = (function() {
     expensePercentLabel: '.item__percentage'
   };
 
+  var formatNumber = function(num, type) {
+    var numSplt, integer, decimal;
+    // get absolute value of num
+    num = Math.abs(num);
+    // change num to a decimal with 2 decimal places
+    num = num.toFixed(2);
+    // splite integer and decimal parts of num
+    numSplt = num.split('.');
+    integer = numSplt[0];
+    decimal = numSplt[1];
+    if(integer.length > 3) {
+      integer = integer.substr(0, integer.length-3) + ',' + integer.substr(integer.length-3, integer.length-1);
+    }
+    type === 'exp' ? sign = '-' : sign = '+';
+    return sign + ' ' + integer + '.' + decimal;
+  };
+
   return {
     // 1. get user input data
     getInput: function() {
@@ -180,7 +197,7 @@ var uiController = (function() {
       //  uses built in str method replace
       newHtmlStr = htmlStr.replace('%id%', item.id);
       newHtmlStr = newHtmlStr.replace('%description%', item.description);
-      newHtmlStr = newHtmlStr.replace('%value%', this.formatNumber(item.value, type));
+      newHtmlStr = newHtmlStr.replace('%value%', formatNumber(item.value, type));
       // 3. insert HTML into DOM
       // uses built in insertAdjacentHTML method
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtmlStr);
@@ -209,9 +226,11 @@ var uiController = (function() {
     },
 
     displayBudget: function(obj) {
-      document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-      document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-      document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+      var type;
+      obj.budget >= 0 ? type = 'inc' : type = 'exp';
+      document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+      document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+      document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
       document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage;
 
       if(obj.percentage > 0) {
@@ -237,23 +256,6 @@ var uiController = (function() {
         }
 
       });
-    },
-
-    formatNumber: function(num, type) {
-      var numSplt, integer, decimal;
-      // get absolute value of num
-      num = Math.abs(num);
-      // change num to a decimal with 2 decimal places
-      num = num.toFixed(2);
-      // splite integer and decimal parts of num
-      numSplt = num.split('.');
-      integer = numSplt[0];
-      decimal = numSplt[1];
-      if(integer.length > 3) {
-        integer = integer.substr(0, integer.length-3) + ',' + integer.substr(integer.length-3, integer.length-1);
-      }
-      type === 'exp' ? sign = '-' : sign = '+';
-      return sign + ' ' + integer + '.' + decimal;
     },
 
     getDOMstrings: function() {
