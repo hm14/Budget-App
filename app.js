@@ -165,6 +165,12 @@ var uiController = (function() {
     return sign + ' ' + integer + '.' + decimal;
   };
 
+  var nodeListForEach = function(list, callback) {
+    for(var i=0; i<list.length; i++) {
+      callback(list[i], i);
+    }
+  };
+
   return {
     // 1. get user input data
     getInput: function() {
@@ -244,11 +250,6 @@ var uiController = (function() {
     displayPercentages: function(percentages) {
       var fields = document.querySelectorAll(DOMstrings.expensePercentLabel);
 
-      var nodeListForEach = function(list, callback) {
-        for(var i=0; i<list.length; i++) {
-          callback(list[i], i);
-        }
-      };
       nodeListForEach(fields, function(current, index) {
         if(percentages[index] > 0) {
           current.textContent = percentages[index] + '%';
@@ -262,11 +263,25 @@ var uiController = (function() {
     displayMonth: function() {
       var today, year, month, months;
       months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
+      // set variable to today's date object
       today = new Date();
+      // extract year and month from date
       year = today.getFullYear();
       month = today.getMonth();
+      // display month and year in DOM
       document.querySelector(DOMstrings.dateLabel).textContent = months[month-1] + ' ' + year;
+    },
+
+    changedType: function() {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputType + ',' +
+        DOMstrings.inputDescription + ',' +
+        DOMstrings.inputValue
+      );
+
+      nodeListForEach(fields, function(current) {
+        current.classList.toggle('red-focus');
+      });
     },
 
     getDOMstrings: function() {
@@ -291,7 +306,9 @@ var appController = (function(dataCtrl, uiCtrl) {
     });
 
     document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
-  }
+
+    document.querySelector(DOM.inputType).addEventListener('change', uiCtrl.changedType);
+  };
 
   var updateBudget = function() {
     // 1. calculate budget
